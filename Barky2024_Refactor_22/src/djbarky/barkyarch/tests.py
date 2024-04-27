@@ -26,7 +26,41 @@ class RepositoryTests(TestCase):
         self.repository.add(self.domain_bookmark_1)
         self.assertEqual(Bookmark.objects.count(), 1)
 
+    def test_repository_update(self):
+        
+        self.repository.add(self.domain_bookmark_1)
+        # print("Before")
+        # print(self.domain_bookmark_1.title)
 
+        self.domain_bookmark_1.title = "Title Updated"
+        self.repository.update(self.domain_bookmark_1)
+        # print("After")
+        # print(self.domain_bookmark_1.title)
+        self.assertEqual(Bookmark.objects.count(), 1)
+        self.assertEqual(Bookmark.objects.get().title, "Title Updated")
+
+    def test_repository_get(self):
+
+        self.repository.add(self.domain_bookmark_1)
+        # print(self.repository.get(id=1).title)
+        self.assertEqual(self.repository._get(id=1).title, "Awesome Django")
+
+    def test_repository_list(self):
+        rightnow = localtime().date()
+        self.domain_bookmark_2 = DomainBookmark(
+            id=2,
+            title="Awesome Django2",
+            url="https://awesomedjango.org/",
+            notes="Best place on the web for Django.",
+            date_added=rightnow,
+        )
+        self.repository.add(self.domain_bookmark_1)
+        self.repository.add(self.domain_bookmark_2)
+        self.assertEqual(Bookmark.objects.count(), 2)
+        self.assertEqual(Bookmark.objects.first().id, 1)
+        
+
+        
 class UoWTests(TestCase):
     def setUp(self):
         rightnow = localtime().date()
